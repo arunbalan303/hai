@@ -1,0 +1,52 @@
+$(function () {
+
+
+    var baseurl = $('#baseurl').val();
+    var url = window.location.href;
+
+
+    $("#search").keypress(function (event) {
+        if (event.which == 13) {
+            $("form .btnsearch").trigger("click");
+ return false;
+        } else  if (event.which != 8)  {
+            var regex = new RegExp("^[a-zA-Z0-9]+$");
+            var str = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+
+            event.preventDefault();
+        }
+
+       return true;
+    });
+
+
+
+    $('form .btnsearch').click(function (event) {
+
+        var formid = $(this).closest("form").attr('id');
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: $(this).closest('form').serialize(),
+            success: function (result)
+            {
+
+                $(".apppendingdiv").html(result.html);
+                $("#result_count").html(result.result_count);
+                $(".showmorebig").html(result.show_more);
+                if (result.status == 'fail') {
+                    alert('Some Network Issue Please try Once again....')
+                }
+            }
+        });
+
+
+    });
+});
+
+
+
+
